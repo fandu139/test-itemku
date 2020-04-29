@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Soal 1 Javascript</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<center><h2>Fandu Pratama Lakuana</h2></center>
+  <div class="login">
+    <div>
+      <label>User ID:</label>
+      <input type="text" name="userid" id="userid" />
+    </div>
+    <div>
+      <label>Nick Name:</label>
+      <input type="text" name="nickname" id="nickname" />
+    </div>
+    <div>
+      <input onclick="online()" type="button" value="online" class="tombol">
+      <input onclick="offline()" type="button" value="offline" class="tombol">
+    </div>
+  </div>
+  
+  <div class="login">
+    <label><b><u>Status User</u></b></label>
+    <div id="message">
+    </div>
+  </div>
+
+  <div class="login">
+    <label><b><u>Log</u></b></label>
+    <div id="log">
+    </div>
+  </div>
+  
+</body>
+<script type="text/javascript">
+  const user = [];
+
+	function online() {   
+    const userData = getUser()
+    const { userid, nickname } = userData    
+		const checkUser = userCheck();
+		if (checkUser) {
+      checkAvailableUserIdAndReplece()
+      pushData('online')
+		} else {
+			alert('Pleace enter your userid and nickname');
+		}
+	}
+
+  function offline() {
+    const userData = getUser()
+    const { userid, nickname } = userData
+    const checkUser = userCheck();
+		if (checkUser) {
+      pushData('offline')
+		} else {
+			alert('Pleace enter your userid and nickname');
+		}
+	}
+
+  function userCheck() {
+    const userData = getUser()
+		if (userData.userid != "" && userData.nickname!="") {
+      return true
+		} else {
+			alert('Pleace enter your userid and nickname');
+		}
+  }
+
+  function contexMessage() {
+    let text = '';
+    user.forEach(userData => {
+      text = `${text} 
+        <li>
+          ${userData.nickname} ${userData.status} 
+        </li>
+      `
+    })
+    document.getElementById("message").innerHTML = text;
+  }
+
+  function getUser(){
+    const userid = document.getElementById("userid").value;
+		const nickname = document.getElementById("nickname").value;
+    return {
+      userid,
+      nickname,
+    }
+  }
+  
+  function checkAvailableUserIdAndReplece(){
+    const userData = getUser()
+    const { userid, nickname } = userData
+    
+    const isUserOffline = user.findIndex(username => {
+      return username.userid === userid && username.statusActive === 'offline';
+    })
+    
+    if (isUserOffline !== -1) {
+      user.forEach(userData => {
+        userData.nickname = nickname
+      })
+    }
+  }
+
+  function pushData(status){
+    const userData = getUser()
+    const { userid, nickname } = userData
+
+    const isOnline = status === 'online' ? true : false
+    let addData = {
+      userid,
+      nickname,
+      statusActive: 'offline',
+      status: 'has left'
+    }
+
+    if (isOnline) {
+      addData = {
+        ...addData,
+        statusActive: 'online',
+        status: 'came in'
+      }
+    }
+
+    user.push(addData)
+
+    contexMessage()
+    document.getElementById("log").innerHTML = JSON.stringify(user, undefined, 4);
+  }
+</script>
+</html>
