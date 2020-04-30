@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Question 2 Javascript</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <center><h2>Question 2</h2></center>
+	<center><h2>Fandu Pratama Lakuana</h2></center>
+    <div class="login">
+        <label><b><u>Status User</u></b></label>
+        <div>
+            <label>Sum Stages</label>
+            <input type="text" id="inputSumStages" value="5"/>
+        </div>
+        <div>
+            <label>Sum Stages</label>
+            <input type="text" id="inputStages" value="[2,1,2,6,2,4,3,3]"/>
+        </div>
+        <div>
+            <input onclick="run()" type="button" value="Run" class="tombol">
+        </div>
+    </div>
+
+    <div class="login">
+        <label><b><u>Output</u></b></label>
+        <div id="output">
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function solution(n, users) {
+        let stages = [];
+        let answer = [];
+        let totalUsers = users.length;
+        let arrayFailedRate = [];
+        for (let i = 1; i < n+1; i++) {
+            const result = users.filter(user => user == i);
+            stages.push(result.length)
+            if (i == n) {
+                arrayFailedRate = failedRate(stages, totalUsers)
+            }
+        }
+
+        arrayFailedRate.sort(function(a, b) {
+            return b.rate - a.rate
+        });
+
+        arrayFailedRate.map(rate => {
+            answer.push(rate.stage);
+        })
+        return answer;
+    }
+
+    function failedRate(stages, totalUsers) {
+        let temp = [];
+        let total = totalUsers;
+        for (let i = 0; i < stages.length; i++) {
+            temp.push({
+                stage: i+1,
+                rate: stages[i]/total
+            });
+            total = total - stages[i]; 
+        }
+
+        return temp;
+    }
+
+    function run() {
+        const inputSumStages = document.getElementById("inputSumStages").value;
+        const inputStages = document.getElementById("inputStages").value.replace("[", '').replace("]", '');
+        
+        const splitInputStages = inputStages.split(",")
+        const result = solution(inputSumStages, splitInputStages)
+        
+        document.getElementById("output").innerHTML = JSON.stringify(result, undefined, 4);
+    }
+</script>
+</html>
+
